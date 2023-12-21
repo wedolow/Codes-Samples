@@ -14,7 +14,7 @@
 #define HEIGHT 202 //!< Video height
 #define WIDTH 360 //!< Video width
 
-#define NB_FRAME 375 //!< Number of frames in the video
+#define NB_FRAME 100 //!< Number of frames in the video
 
 #define MAX_DELTA_X 38 //!< Largest abscissa difference for block matching
 #define MAX_DELTA_Y 21 //!< Largest ordinate difference for block matching

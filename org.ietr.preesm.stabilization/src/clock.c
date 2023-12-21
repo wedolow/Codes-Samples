@@ -39,7 +39,7 @@ void startTiming(int stamp){
 }
 
 // Stoping to record time for a given stamp. Returns the time in us
-unsigned int stopTiming(int stamp){
+unsigned int getTiming(int stamp){
 	unsigned int elapsedus = 0;
 #ifdef _WIN32
 	LARGE_INTEGER frequency;
@@ -57,10 +57,10 @@ unsigned int stopTiming(int stamp){
 	gettimeofday(&t2, NULL);
 
     // compute and print the elapsed time in millisec
-    elapsedTimes[stamp] = (t2.tv_sec - startTimes[stamp].tv_sec) * 1000.0;      // sec to ms
-    elapsedTimes[stamp] += (t2.tv_usec - startTimes[stamp].tv_usec) / 1000.0;   // us to ms
+    elapsedTimes[stamp] = (double)(t2.tv_sec - startTimes[stamp].tv_sec) * 1000.0;      // sec to ms
+    elapsedTimes[stamp] += (double)(t2.tv_usec - startTimes[stamp].tv_usec) / 1000.0;   // us to ms
 #endif
 
-    elapsedus = (int)(elapsedTimes[stamp]*1000);
+    elapsedus = (int)(elapsedTimes[stamp]*1000.0);
     return elapsedus;
 }

@@ -141,21 +141,21 @@ unsigned int computeMeanSquaredError(const int width, const int height,
 	int xMaxClip = MAX(MIN(width - deltaX, blockWidth), 0);
 
 	// Compute MSE
-	unsigned int cost;
+	float cost;
 
 	// At least half of the block must be matched within previous frame to
 	// consider the cost as valid (otherwise, a small number of pixel might
 	// get "lucky" and get a low cost).
 	int matchedSize = (yMaxClip - yMinClip)*(xMaxClip - xMinClip);
 	if (matchedSize < blockHeight*blockWidth / 2) {
-		cost = 0xffffffff;
+		cost = INFINITY;
 	}
 	else {
 		cost = 0;
 		int y, x;
 		for (y = yMinClip; y < yMaxClip; y++){
 			for (x = xMinClip; x < xMaxClip; x++){
-				const unsigned char pixBlock = *(blockData + y*blockWidth + x);
+				const volatile unsigned char pixBlock = *(blockData + y*blockWidth + x);
 				const unsigned char pixFrame = *(previousFrame + (deltaY * width + deltaX) + y * width + x);
 				// Squared error
 				short diff = pixFrame - pixBlock;
@@ -274,8 +274,8 @@ void findDominatingMotionVector(const int nbVectors,
 		for (i = 0; i < nbVectors; i++){
 			if (probas[i] > threshold){
 				nbAbove++;
-				dominatingVector->x += vectors[i].x;
-				dominatingVector->y += vectors[i].y;
+				dominatingVector->x += (float)vectors[i].x;
+				dominatingVector->y += (float)vectors[i].y;
 			}
 		}
 		dominatingVector->x /= (float)nbAbove;
@@ -295,7 +295,7 @@ void accumulateMotion(IN const coordf * const motionVector, IN const coordf * co
 	filteredMotionOut->x = filteredMotionIn->x -roundf(filteredMotionIn->x);
 	filteredMotionOut->y = filteredMotionIn->y -roundf(filteredMotionIn->y);
 	filteredMotionOut->x = filteredMotionOut->x + (accumulatedMotionIn->x * (1.0f - HIGH_PASS_FILTER_TAP)) / 2.0f;
-	filteredMotionOut->y = filteredMotionOut->y + (accumulatedMotionIn->y * (1.0f - HIGH_PASS_FILTER_TAP)) /2.0f;
+	filteredMotionOut->y = filteredMotionOut->y + (accumulatedMotionIn->y * (1.0f - HIGH_PASS_FILTER_TAP)) / 2.0f;
 
 	// Apply filter
 	accumulatedMotionOut->x = accumulatedMotionIn->x * HIGH_PASS_FILTER_TAP;

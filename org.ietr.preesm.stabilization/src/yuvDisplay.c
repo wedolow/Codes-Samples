@@ -211,7 +211,7 @@ void yuvDisplayWithNbSlice(int id, int nbSlice, unsigned char *y, unsigned char 
 	char fps_text[20];
 	SDL_Color colorWhite = { 255, 255, 255, 255 };
 
-	int time = stopTiming(display.stampId + 1);
+	int time = getTiming(display.stampId + 1);
 	sprintf(fps_text, "FPS: %.2f", 1. / (time / 1000000. / FPS_MEAN));
 	startTiming(display.stampId + 1);
 	display.stampId = (display.stampId + 1) % FPS_MEAN;

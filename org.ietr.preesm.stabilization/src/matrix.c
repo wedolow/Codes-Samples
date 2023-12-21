@@ -24,8 +24,8 @@ void meanVector(const unsigned int nbVector, const coord * const vectors,
 		y += vec->y;
 	}
 
-	mean->x = x / (float)nbVector;
-	mean->y = y / (float)nbVector;
+	mean->x = (float)x / (float)nbVector;
+	mean->y = (float)y / (float)nbVector;
 }
 
 void covarianceMatrix2D(const unsigned int nbVector, const coord * const vectors,
@@ -36,8 +36,8 @@ void covarianceMatrix2D(const unsigned int nbVector, const coord * const vectors
     unsigned int c;
 	// Substract mean to all vectors
 	for (i = 0; i < nbVector; i++){
-		(temp + i)->x = (vectors + i)->x - mean->x;
-		(temp + i)->y = (vectors + i)->y - mean->y;
+		(temp + i)->x = (float)(vectors + i)->x - mean->x;
+		(temp + i)->y = (float)(vectors + i)->y - mean->y;
 	}
 
 	// Compute Sigma
@@ -54,10 +54,11 @@ void covarianceMatrix2D(const unsigned int nbVector, const coord * const vectors
 	}
 
 	// mean
-	sigma->coeffs[0] /= (nbVector - 1);
-	sigma->coeffs[1] /= (nbVector - 1);
+	float nbVector1 = (float)(nbVector - 1);
+	sigma->coeffs[0] /= nbVector1;
+	sigma->coeffs[1] /= nbVector1;
 	sigma->coeffs[2] = sigma->coeffs[1];
-	sigma->coeffs[3] /= (nbVector - 1);
+	sigma->coeffs[3] /= nbVector1;
 
 	// free temp vectors
 	free(temp);
@@ -81,15 +82,15 @@ void getProbabilities(const unsigned int nbVector, const coord * const vectors,
 		for (i= 0; i < nbVector; i++){
 			const coord *vec = vectors + i;
 			// Substract mean value
-			float tX = vec->x - mean->x;
-			float tY = vec->y - mean->y;
+			float tX = (float)vec->x - mean->x;
+			float tY = (float)vec->y - mean->y;
 
 			// multiply by invSigma
 			float sigmaTX = invSigma.coeffs[0] * tX + invSigma.coeffs[2] * tY;
 			float sigmaTY = invSigma.coeffs[1] * tX + invSigma.coeffs[3] * tY;
 
 			// Proba
-			*(proba + i) = expf(-((tX*sigmaTX) + (tY*sigmaTY)) / 2) * divisor;
+			*(proba + i) = expf(-((tX*sigmaTX) + (tY*sigmaTY)) / 2.0) * divisor;
 		}
 	}
 	// If the multivariata gaussian cannot be computed
@@ -115,7 +116,7 @@ void getProbabilities(const unsigned int nbVector, const coord * const vectors,
 			// Loop over the vectors to compute probability
 			unsigned int i;
 			for (i = 0; i < nbVector; i++){
-				float val = (dimension == 2) ? vectors[i].x - mean->x : vectors[i].y - mean->y;
+				float val = (dimension == 2) ? (float)vectors[i].x - mean->x : (float)vectors[i].y - mean->y;
 				proba[i] = expf(-(val*val) / (2 * var))*divisor;
 			}
 		}
