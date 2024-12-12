@@ -19,7 +19,7 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio.*")
 endif()
 
 # Add definition for relative path into project
-add_definitions( -DPROJECT_ROOT_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
+add_definitions( -DPROJECT_ROOT_PATH=".")
 
 project(stabilization-sequential)
 project(stabilization)
