@@ -7,7 +7,7 @@ This is an example of High Dynamic Range, using OpenCV.
 ```bash
 export os=ubuntu
 make ${os}-deps
-sudo configure
+sudo make configure
 ```
 
 ## Compile code and launch
